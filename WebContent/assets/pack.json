@@ -1,0 +1,261 @@
+{
+  "preloader": {
+    "files": [
+      {
+        "type": "image",
+        "key": "أ",
+        "url": "assets/imgs/letters/أ.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "ث",
+        "url": "assets/imgs/letters/ث.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "ج",
+        "url": "assets/imgs/letters/ج.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "د ",
+        "url": "assets/imgs/letters/د .png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "ش",
+        "url": "assets/imgs/letters/ش.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "ص",
+        "url": "assets/imgs/letters/ص.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "ظ",
+        "url": "assets/imgs/letters/ظ.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "ع",
+        "url": "assets/imgs/letters/ع.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "غ",
+        "url": "assets/imgs/letters/غ.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "ق",
+        "url": "assets/imgs/letters/ق.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "ك",
+        "url": "assets/imgs/letters/ك.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "م",
+        "url": "assets/imgs/letters/م.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "ه",
+        "url": "assets/imgs/letters/ه.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "و",
+        "url": "assets/imgs/letters/و.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "ي",
+        "url": "assets/imgs/letters/ي.png",
+        "overwrite": false
+      },
+
+
+
+
+
+      {
+        "type": "image",
+        "key": "x Button",
+        "url": "assets/imgs/x Button.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "x Button HOVER EFFECT",
+        "url": "assets/imgs/x Button HOVER EFFECT.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "Sound HOVER EFFECT",
+        "url": "assets/imgs/Sound HOVER EFFECT.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "Sound",
+        "url": "assets/imgs/Sound.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "Try again page",
+        "url": "assets/imgs/Try again page.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "Break Star",
+        "url": "assets/imgs/Break Star.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "Exit warning",
+        "url": "assets/imgs/Exit warning.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "btnNO1",
+        "url": "assets/imgs/btnNO1.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "btnNO2",
+        "url": "assets/imgs/btnNO2.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "btnYES1",
+        "url": "assets/imgs/btnYES1.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "btnYES2",
+        "url": "assets/imgs/btnYES2.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "btnBACK1",
+        "url": "assets/imgs/btnBACK1.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "btnBACK2",
+        "url": "assets/imgs/btnBACK2.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "btnNEXT1",
+        "url": "assets/imgs/btnNEXT1.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "btnNEXT2",
+        "url": "assets/imgs/btnNEXT2.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "btnReplay1",
+        "url": "assets/imgs/btnReplay1.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "btnReplay2",
+        "url": "assets/imgs/btnReplay2.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "Collected Points",
+        "url": "assets/imgs/Collected Points.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "Completion page LATEST UPDATED",
+        "url": "assets/imgs/Completion page LATEST UPDATED.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "Trophy",
+        "url": "assets/imgs/Trophy.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "Instructions page  ALL ACTIVITY  TITLEs",
+        "url": "assets/imgs/Instructions page  ALL ACTIVITY  TITLEs.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "btnPLAY1",
+        "url": "assets/imgs/btnPLAY1.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "btnPLAY2",
+        "url": "assets/imgs/btnPLAY2.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "welcome",
+        "url": "assets/imgs/welcome.png",
+        "overwrite": false
+      },
+
+      {"type":"audio","key":"Activity completion fantastic","url":["assets/sound/mp3/Activity completion fantastic.mp3"],"autoDecode":true},
+      {"type":"audio","key":"activity selection - button selection","url":["assets/sound/mp3/activity selection - button selection.mp3"],"autoDecode":true},
+      {"type":"audio","key":"button hover","url":["assets/sound/mp3/button hover.mp3"],"autoDecode":true},
+      {"type":"audio","key":"Fail - close one","url":["assets/sound/mp3/Fail - close one.mp3"],"autoDecode":true},
+      {"type":"audio","key":"Welcome Find the sound","url":["assets/sound/mp3/Welcome Find the sound.mp3"],"autoDecode":true},
+      {"type":"audio","key":"bg_sound","url":["assets/sound/mp3/bg_sound.mp3","assets/sound/ogg/bg_sound.ogg"],"autoDecode":true},
+      {"type":"audio","key":"Goose no","url":["assets/sound/mp3/Goose no.mp3","assets/sound/ogg/Goose no.ogg"],"autoDecode":true},
+      {"type":"audio","key":"Goose Yes","url":["assets/sound/mp3/Goose Yes.mp3","assets/sound/ogg/Goose Yes.ogg"],"autoDecode":true}
+    ]
+  },
+  "meta": {
+    "generated": "1548311514538",
+    "app": "Phaser Editor",
+    "url": "http://phasereditor.boniatillo.com",
+    "version": "1.0",
+    "copyright": "Arian Fornaris (c) 2015,2016"
+  }
+}

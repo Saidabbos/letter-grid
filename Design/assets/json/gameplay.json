@@ -1,0 +1,19 @@
+{
+	"letters": [
+		{"correctLetterName":"أ", "correctAudioKey": ""},
+		{"correctLetterName":"ث", "correctAudioKey": ""},
+		{"correctLetterName":"ج", "correctAudioKey": ""},
+		{"correctLetterName":"د ", "correctAudioKey": ""},
+		{"correctLetterName":"ش", "correctAudioKey": ""},
+		{"correctLetterName":"ص", "correctAudioKey": ""},
+		{"correctLetterName":"ظ", "correctAudioKey": ""},
+		{"correctLetterName":"ع", "correctAudioKey": ""},
+		{"correctLetterName":"غ", "correctAudioKey": ""},
+		{"correctLetterName":"ق", "correctAudioKey": ""},
+		{"correctLetterName":"ك", "correctAudioKey": ""},
+		{"correctLetterName":"م", "correctAudioKey": ""},
+		{"correctLetterName":"ه", "correctAudioKey": ""},
+		{"correctLetterName":"و", "correctAudioKey": ""},
+		{"correctLetterName":"ي", "correctAudioKey": ""}
+	]
+}
