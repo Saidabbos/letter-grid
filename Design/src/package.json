@@ -1,7 +1,7 @@
 {
-  "name": "Sound-Hive",
+  "name": "Letter-Grid",
   "version": "0.0.1",
-  "description": "Sound Hive HTML5 game",
+  "description": "Letter Grid HTML5 game",
   "main": "main.js",
   "scripts": {
     "start": "gulp bundle",

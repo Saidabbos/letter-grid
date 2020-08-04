@@ -15,6 +15,7 @@ namespace sh.screen {
             this._instructionPage.setInteractive();
 
             this._instructionPageTitle = new Phaser.GameObjects.Image(this.scene, 495, 105, 'welcome');
+            this._instructionPageTitle.setScale(0.75);
 
             this._btnPlay = new Phaser.GameObjects.Image(this.scene, game.scale.width / 2, 480 - 50, 'btnPLAY1');
             this._btnPlay.setInteractive({cursor: 'pointer'});

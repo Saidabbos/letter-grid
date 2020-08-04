@@ -21,8 +21,8 @@
       },
       {
         "type": "image",
-        "key": "د ",
-        "url": "assets/imgs/letters/د .png",
+        "key": "د",
+        "url": "assets/imgs/letters/د.png",
         "overwrite": false
       },
       {
@@ -240,6 +240,36 @@
         "url": "assets/imgs/welcome.png",
         "overwrite": false
       },
+      {
+        "type": "image",
+        "key": "3 Letter Grid",
+        "url": "assets/imgs/3 Letter Grid.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "rr_def",
+        "url": "assets/imgs/rr_def.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "rr_active",
+        "url": "assets/imgs/rr_active.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "crescent_moon_active",
+        "url": "assets/imgs/crescent_moon_active.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "crescent_moon_def",
+        "url": "assets/imgs/crescent_moon_def.png",
+        "overwrite": false
+      },
 
       {"type":"audio","key":"Activity completion fantastic","url":["assets/sound/mp3/Activity completion fantastic.mp3"],"autoDecode":true},
       {"type":"audio","key":"activity selection - button selection","url":["assets/sound/mp3/activity selection - button selection.mp3"],"autoDecode":true},
@@ -248,7 +278,23 @@
       {"type":"audio","key":"Welcome Find the sound","url":["assets/sound/mp3/Welcome Find the sound.mp3"],"autoDecode":true},
       {"type":"audio","key":"bg_sound","url":["assets/sound/mp3/bg_sound.mp3","assets/sound/ogg/bg_sound.ogg"],"autoDecode":true},
       {"type":"audio","key":"Goose no","url":["assets/sound/mp3/Goose no.mp3","assets/sound/ogg/Goose no.ogg"],"autoDecode":true},
-      {"type":"audio","key":"Goose Yes","url":["assets/sound/mp3/Goose Yes.mp3","assets/sound/ogg/Goose Yes.ogg"],"autoDecode":true}
+      {"type":"audio","key":"Goose Yes","url":["assets/sound/mp3/Goose Yes.mp3","assets/sound/ogg/Goose Yes.ogg"],"autoDecode":true},
+      {"type":"audio","key":"translate_أ","url":["assets/sound/mp3/letters/translate_أ.mp3"],"autoDecode":true},
+      {"type":"audio","key":"translate_ث","url":["assets/sound/mp3/letters/translate_ث.mp3"],"autoDecode":true},
+      {"type":"audio","key":"translate_ج","url":["assets/sound/mp3/letters/translate_ج.mp3"],"autoDecode":true},
+      {"type":"audio","key":"translate_د","url":["assets/sound/mp3/letters/translate_د.mp3"],"autoDecode":true},
+      {"type":"audio","key":"translate_ش","url":["assets/sound/mp3/letters/translate_ش.mp3"],"autoDecode":true},
+      {"type":"audio","key":"translate_ص","url":["assets/sound/mp3/letters/translate_ص.mp3"],"autoDecode":true},
+      {"type":"audio","key":"translate_ظ","url":["assets/sound/mp3/letters/translate_ظ.mp3"],"autoDecode":true},
+      {"type":"audio","key":"translate_ع","url":["assets/sound/mp3/letters/translate_ع.mp3"],"autoDecode":true},
+      {"type":"audio","key":"translate_غ","url":["assets/sound/mp3/letters/translate_غ.mp3"],"autoDecode":true},
+      {"type":"audio","key":"translate_ق","url":["assets/sound/mp3/letters/translate_ق.mp3"],"autoDecode":true},
+      {"type":"audio","key":"translate_ك","url":["assets/sound/mp3/letters/translate_ك.mp3"],"autoDecode":true},
+      {"type":"audio","key":"translate_م","url":["assets/sound/mp3/letters/translate_م.mp3"],"autoDecode":true},
+      {"type":"audio","key":"translate_ه","url":["assets/sound/mp3/letters/translate_ه.mp3"],"autoDecode":true},
+      {"type":"audio","key":"translate_و","url":["assets/sound/mp3/letters/translate_و.mp3"],"autoDecode":true},
+      {"type":"audio","key":"translate_ي","url":["assets/sound/mp3/letters/translate_ي.mp3"],"autoDecode":true},
+      {"type":"audio","key":"translate_click_on","url":["assets/sound/mp3/letters/translate_click_on.mp3"],"autoDecode":true}
     ]
   },
   "meta": {

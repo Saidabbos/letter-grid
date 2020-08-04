@@ -128,14 +128,17 @@ var sh;
     (function (core) {
         class Gameplay {
             constructor() {
-                this.allLettersNames = ["أ", "ث", "ج", "د ", "ش", "ص", "ظ", "ع", "غ", "ق", "ك", "م", "ه", "و", "ي"];
+                this.totalLettersCount = 25;
+                this.totalRoundsNum = 2;
+                this.failsNumToLose = 3;
+                this.choicesNumPerRound = 5;
+                // public readonly allLettersNames:string[] = ["أ","ث","ج","د ","ش","ص","ظ","ع","غ","ق","ك","م","ه","و","ي"];
                 this.currentRound = 0;
-                this.currentLetter = 0;
+                this.currentLetter = null;
                 this.correctAnswersCount = 0;
                 this.wrongAnswersCount = 0;
-                this.reset();
-                let json = game.cache.json.get('gameplay');
-                this.letters = json["letters"];
+                this.correctAnswersCountThisRound = 0;
+                this.wrongAnswersCountThisRound = 0;
             }
             setupCallbacks(onComplete, onLose) {
                 this.onComplete = onComplete;
@@ -144,7 +147,7 @@ var sh;
             onLetterChosen() {
                 if (this.isNewRound()) {
                     this.currentRound++;
-                    if (this.currentRound >= 3) {
+                    if (this.currentRound >= this.totalRoundsNum) {
                         this.onComplete(this.correctAnswersCount, this.correctAnswersCount);
                         return true;
                     }
@@ -155,26 +158,31 @@ var sh;
                 return false;
             }
             nextLetter() {
-                if (this.currentLetter == this.letters.length - 1) {
-                    this.currentLetter = 0;
+                if (this.roundsLetter.length == 0) {
+                    this.currentLetter = null;
                 }
                 else {
-                    this.currentLetter++;
+                    this.currentLetter = Phaser.Utils.Array.RemoveRandomElement(this.roundsLetter);
+                    this.randomizeGrid();
                 }
+                this.correctAnswersCountThisRound = 0;
+                this.wrongAnswersCountThisRound = 0;
             }
             getCorrectLetterName() {
-                return this.letters[this.currentLetter]['correctLetterName'];
+                return this.currentLetter['correctLetterName'];
             }
             getCorrectAudioKey() {
-                return this.letters[this.currentLetter]['correctAudioKey'];
+                return this.currentLetter['correctAudioKey'];
             }
             onCorrectAnswer() {
                 this.correctAnswersCount++;
+                this.correctAnswersCountThisRound++;
                 return this.onLetterChosen();
             }
             onWrongAnswer() {
                 this.wrongAnswersCount++;
-                if (this.wrongAnswersCount >= 4) {
+                this.wrongAnswersCountThisRound++;
+                if (this.wrongAnswersCount >= this.failsNumToLose) {
                     this.onLose(this.correctAnswersCount, this.correctAnswersCount);
                     return true;
                 }
@@ -186,17 +194,43 @@ var sh;
             getCurrentTotalAnswersCount() {
                 return this.correctAnswersCount + this.wrongAnswersCount;
             }
+            getCurrentTotalAnswersCountThisRound() {
+                return this.correctAnswersCountThisRound + this.wrongAnswersCountThisRound;
+            }
             isNewRound() {
-                return this.getCurrentTotalAnswersCount() % 5 == 0;
+                return this.getCurrentTotalAnswersCount() % this.choicesNumPerRound == 0;
             }
             isRoundsComplete() {
-                return this.getCurrentTotalAnswersCount() / 5 >= 3;
+                return this.getCurrentTotalAnswersCount() / this.choicesNumPerRound >= this.totalRoundsNum;
+            }
+            randomizeGrid() {
+                let _letters = this.letters.slice();
+                this.gridLettersNames = [];
+                let correctLetterName = this.getCorrectLetterName();
+                for (let k = 0; k < this.totalLettersCount / this.choicesNumPerRound - 1; k++) {
+                    let rndLetterName = Phaser.Utils.Array.RemoveRandomElement(_letters);
+                    for (let i = 0; i < this.choicesNumPerRound; i++) {
+                        this.gridLettersNames.push(rndLetterName['correctLetterName']);
+                    }
+                }
+                for (let i = 0; i < this.choicesNumPerRound; i++) {
+                    this.gridLettersNames.push(correctLetterName);
+                }
             }
             reset() {
+                let json = game.cache.json.get('gameplay');
+                this.letters = json["letters"].slice();
+                let _letters = this.letters.slice();
+                this.roundsLetter = [];
+                for (let i = 0; i < this.totalRoundsNum; i++) {
+                    this.roundsLetter.push(Phaser.Utils.Array.RemoveRandomElement(_letters));
+                }
+                this.nextLetter();
                 this.currentRound = 0;
-                this.currentLetter = 0;
                 this.correctAnswersCount = 0;
                 this.wrongAnswersCount = 0;
+                this.correctAnswersCountThisRound = 0;
+                this.wrongAnswersCountThisRound = 0;
             }
         }
         core.Gameplay = Gameplay;
@@ -382,6 +416,8 @@ var sh;
         class GameplayScreen extends Phaser.GameObjects.Container {
             constructor(scene, gameplay) {
                 super(scene);
+                this.rows = 5;
+                this.cols = 5;
                 this.bgMusic = null;
                 this.soundGooseYes = null;
                 this.soundGooseNo = null;
@@ -424,15 +460,15 @@ var sh;
                     });
                 };
                 this.gameplay = gameplay;
+                window["t"] = this;
             }
             showGameplay() {
                 setPageBackground("bg-australia");
                 this.bgMusic = this.scene.sound.add("bg_sound");
                 this.bgMusic.play();
                 this.bgMusic.loop = true;
-                this.gameplay.reset();
-                this._gameStage = new Phaser.GameObjects.Image(this.scene, game.scale.width / 2, game.scale.height / 2, null);
-                this._gameStage.setOrigin(0.488, 0.476);
+                this._gameStage = new Phaser.GameObjects.Image(this.scene, game.scale.width / 2, game.scale.height / 2, '3 Letter Grid');
+                this._gameStage.setOrigin(0.485, 0.48);
                 this._gameStage.setInteractive();
                 this._btnSound = new Phaser.GameObjects.Image(this.scene, 160 - 105, 100 - 50, 'Sound');
                 this._btnSound.setInteractive({ cursor: 'pointer' });
@@ -442,15 +478,100 @@ var sh;
                 setupButtonTextureBased(this._btnClose, 'x Button', 'x Button HOVER EFFECT');
                 this.gameplayContainer = new Phaser.GameObjects.Container(this.scene);
                 this.addAt(this.gameplayContainer, 0);
+                this.targetLetterLabel = new Phaser.GameObjects.Image(this.scene, 590, 90, null);
                 this.gameplayContainer.add([
                     this._gameStage,
                     this._btnSound,
-                    this._btnClose
+                    this._btnClose,
+                    this.targetLetterLabel
                 ]);
+                this.gameplay.reset();
+                this.createGrid();
+                this.createCrescentMoons();
                 this.createInput();
+                this.shuffleOutHexagons();
                 this.gameplay.setupCallbacks(this.showCompleteWindow, this.showLoseWindow);
             }
+            shuffleOutHexagons() {
+                this.setInputEnabled(false);
+                for (let i = 0; i < this.rows; i++) {
+                    for (let j = 0; j < this.cols; j++) {
+                        let c = this.grid[i][j];
+                        c.setScale(0);
+                        this.scene.tweens.add({
+                            targets: c,
+                            "scale": 1,
+                            duration: 300,
+                            delay: 700
+                        });
+                    }
+                }
+                this.targetLetterLabel.visible = false;
+                this.resetCrescentMoons();
+                this.randomizeGrid();
+                delayedCall(1200, () => {
+                    this.targetLetterLabel.visible = true;
+                    this.updateClickLetterTargetLabel();
+                    if (this.gameplay.isNewRound()) {
+                        if (!this.gameplay.isRoundsComplete()) {
+                            this.playCorrectAudio();
+                            delayedCall(2000, () => {
+                                this.setInputEnabled(true);
+                            });
+                        }
+                    }
+                    else {
+                        this.setInputEnabled(true);
+                    }
+                });
+            }
+            shuffleInHexagons() {
+                this.setInputEnabled(false);
+                for (let i = 0; i < this.rows; i++) {
+                    for (let j = 0; j < this.cols; j++) {
+                        let c = this.grid[i][j];
+                        this.scene.tweens.add({
+                            targets: c,
+                            "scale": 0,
+                            duration: 300,
+                            delay: 700,
+                            onComplete: () => {
+                                c["bg"].setTexture('rr_def');
+                            }
+                        });
+                    }
+                }
+                delayedCall(1000, () => {
+                    this.shuffleOutHexagons();
+                });
+            }
             createInput() {
+                for (let i = 0; i < this.rows; i++) {
+                    for (let j = 0; j < this.cols; j++) {
+                        let c = this.grid[i][j];
+                        c["bg"].on('pointerup', () => {
+                            this.playBtnClickAnim(c);
+                            c["bg"].setTexture('rr_active');
+                            let l = c["letter"];
+                            if (l && l.texture.key == this.gameplay.getCorrectLetterName()) {
+                                let completed = this.onCorrectAnswer();
+                                if (!completed) {
+                                    if (this.gameplay.isNewRound()) {
+                                        this.shuffleInHexagons();
+                                    }
+                                }
+                            }
+                            else {
+                                let lost = this.onWrongAnswer();
+                                if (!lost) {
+                                    if (this.gameplay.isNewRound()) {
+                                        this.shuffleInHexagons();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
                 this._btnSound.on('pointerup', () => {
                     this.playBtnClickAnim(this._btnSound);
                     this.onSoundClick();
@@ -460,13 +581,69 @@ var sh;
                     this.onCloseClick();
                 });
             }
+            createGrid() {
+                let startX = 355;
+                let startY = 200;
+                let dx = 76;
+                let dy = 71;
+                this.grid = [];
+                for (let i = 0; i < this.rows; i++) {
+                    let arr = [];
+                    for (let j = 0; j < this.cols; j++) {
+                        let c = new Phaser.GameObjects.Container(this.scene, startX + i * dx, startY + j * dy);
+                        this.gameplayContainer.add(c);
+                        c["bg"] = new Phaser.GameObjects.Image(this.scene, 0, 0, 'rr_def');
+                        c.add(c["bg"]);
+                        c["letter"] = new Phaser.GameObjects.Image(this.scene, 0, 0, null);
+                        c["letter"]["rectContainer"] = c;
+                        c.add(c["letter"]);
+                        arr.push(c);
+                    }
+                    this.grid.push(arr);
+                }
+            }
+            randomizeGrid() {
+                let gridLettersNames = this.gameplay.gridLettersNames.slice();
+                for (let i = 0; i < this.rows; i++) {
+                    for (let j = 0; j < this.cols; j++) {
+                        let l = this.grid[i][j]["letter"];
+                        let rnd = Phaser.Utils.Array.RemoveRandomElement(gridLettersNames);
+                        l.setTexture(rnd);
+                    }
+                }
+            }
+            updateClickLetterTargetLabel() {
+                this.targetLetterLabel.setTexture(this.gameplay.getCorrectLetterName());
+            }
+            createCrescentMoons() {
+                this.crescentMoons = [];
+                let dy = 61;
+                for (let i = 0; i < this.gameplay.choicesNumPerRound; i++) {
+                    let cm = new Phaser.GameObjects.Image(this.scene, 179, 261 + i * dy, 'crescent_moon_def');
+                    this.crescentMoons.push(cm);
+                    this.gameplayContainer.add(cm);
+                    cm.visible = false;
+                }
+            }
+            resetCrescentMoons() {
+                for (let i = 0; i < this.crescentMoons.length; i++) {
+                    this.setMoonsActive(i, false);
+                    this.crescentMoons[i].visible = false;
+                }
+            }
+            setMoonsActive(index, active) {
+                this.crescentMoons[index].visible = true;
+                this.crescentMoons[index].setTexture(active ? 'crescent_moon_active' : 'crescent_moon_def');
+            }
             onCorrectAnswer() {
+                this.setMoonsActive(this.gameplay.getCurrentTotalAnswersCountThisRound(), true);
                 let completed = this.gameplay.onCorrectAnswer();
                 this.soundGooseYes = this.scene.sound.add("Goose Yes");
                 this.soundGooseYes.play();
                 return completed;
             }
             onWrongAnswer() {
+                this.setMoonsActive(this.gameplay.getCurrentTotalAnswersCountThisRound(), false);
                 let lost = this.gameplay.onWrongAnswer();
                 this.soundGooseNo = this.scene.sound.add("Goose no");
                 this.soundGooseNo.play();
@@ -476,10 +653,22 @@ var sh;
                 if (this.correctAudio) {
                     this.correctAudio.stop();
                 }
-                this.correctAudio = this.scene.sound.add(this.gameplay.getCorrectAudioKey());
-                this.correctAudio.play();
-                if (this.areYouSureWindow && this.areYouSureWindow.parentContainer == this) {
-                    this.correctAudio.pause();
+                try {
+                    this.correctAudio = this.scene.sound.add('translate_click_on');
+                    this.correctAudio.play();
+                    if (this.areYouSureWindow && this.areYouSureWindow.parentContainer == this) {
+                        this.correctAudio.pause();
+                    }
+                    delayedCall(750, () => {
+                        this.correctAudio = this.scene.sound.add(this.gameplay.getCorrectAudioKey());
+                        this.correctAudio.play();
+                        if (this.areYouSureWindow && this.areYouSureWindow.parentContainer == this) {
+                            this.correctAudio.pause();
+                        }
+                    });
+                }
+                catch (e) {
+                    console.log(e);
                 }
             }
             onSoundClick() {
@@ -537,13 +726,17 @@ var sh;
             }
             setInputEnabled(enabled) {
                 if (enabled) {
-                    for (let hc of this.hexagons) {
-                        hc["bg"].setInteractive({ cursor: 'pointer' });
+                    for (let i = 0; i < this.rows; i++) {
+                        for (let j = 0; j < this.cols; j++) {
+                            this.grid[i][j]["bg"].setInteractive({ cursor: 'pointer' });
+                        }
                     }
                 }
                 else {
-                    for (let hc of this.hexagons) {
-                        hc["bg"].disableInteractive();
+                    for (let i = 0; i < this.rows; i++) {
+                        for (let j = 0; j < this.cols; j++) {
+                            this.grid[i][j]["bg"].disableInteractive();
+                        }
                     }
                 }
             }
@@ -583,6 +776,7 @@ var sh;
                 this._instructionPage.setOrigin(0, 0);
                 this._instructionPage.setInteractive();
                 this._instructionPageTitle = new Phaser.GameObjects.Image(this.scene, 495, 105, 'welcome');
+                this._instructionPageTitle.setScale(0.75);
                 this._btnPlay = new Phaser.GameObjects.Image(this.scene, game.scale.width / 2, 480 - 50, 'btnPLAY1');
                 this._btnPlay.setInteractive({ cursor: 'pointer' });
                 this._btnPlay.once('pointerup', onPlayClick);
@@ -687,4 +881,3 @@ var sh;
         screen.TryAgainWindow = TryAgainWindow;
     })(screen = sh.screen || (sh.screen = {}));
 })(sh || (sh = {}));
-//# sourceMappingURL=main.js.map

@@ -1,19 +1,19 @@
 {
 	"letters": [
-		{"correctLetterName":"أ", "correctAudioKey": ""},
-		{"correctLetterName":"ث", "correctAudioKey": ""},
-		{"correctLetterName":"ج", "correctAudioKey": ""},
-		{"correctLetterName":"د ", "correctAudioKey": ""},
-		{"correctLetterName":"ش", "correctAudioKey": ""},
-		{"correctLetterName":"ص", "correctAudioKey": ""},
-		{"correctLetterName":"ظ", "correctAudioKey": ""},
-		{"correctLetterName":"ع", "correctAudioKey": ""},
-		{"correctLetterName":"غ", "correctAudioKey": ""},
-		{"correctLetterName":"ق", "correctAudioKey": ""},
-		{"correctLetterName":"ك", "correctAudioKey": ""},
-		{"correctLetterName":"م", "correctAudioKey": ""},
-		{"correctLetterName":"ه", "correctAudioKey": ""},
-		{"correctLetterName":"و", "correctAudioKey": ""},
-		{"correctLetterName":"ي", "correctAudioKey": ""}
+		{"correctLetterName":"أ", "correctAudioKey": "translate_أ"},
+		{"correctLetterName":"ث", "correctAudioKey": "translate_ث"},
+		{"correctLetterName":"ج", "correctAudioKey":"translate_ج"},
+		{"correctLetterName":"د", "correctAudioKey":"translate_د"},
+		{"correctLetterName":"ش", "correctAudioKey":"translate_ش"},
+		{"correctLetterName":"ص", "correctAudioKey":"translate_ص"},
+		{"correctLetterName":"ظ", "correctAudioKey":"translate_ظ"},
+		{"correctLetterName":"ع", "correctAudioKey":"translate_ع"},
+		{"correctLetterName":"غ", "correctAudioKey":"translate_غ"},
+		{"correctLetterName":"ق", "correctAudioKey":"translate_ق"},
+		{"correctLetterName":"ك", "correctAudioKey":"translate_ك"},
+		{"correctLetterName":"م", "correctAudioKey":"translate_م"},
+		{"correctLetterName":"ه", "correctAudioKey":"translate_ه"},
+		{"correctLetterName":"و", "correctAudioKey":"translate_و"},
+		{"correctLetterName":"ي", "correctAudioKey":"translate_ي"}
 	]
 }
