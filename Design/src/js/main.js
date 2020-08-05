@@ -3,7 +3,7 @@ var sh;
     class App extends Phaser.Game {
         constructor() {
             let config = {
-                type: Phaser.AUTO,
+                type: Phaser.WEBGL,
                 width: App.CANVAS_WIDTH,
                 height: App.CANVAS_HEIGHT,
                 scale: {
@@ -182,8 +182,8 @@ var sh;
             onWrongAnswer() {
                 this.wrongAnswersCount++;
                 this.wrongAnswersCountThisRound++;
-                if (this.wrongAnswersCount >= this.failsNumToLose) {
-                    this.onLose(this.correctAnswersCount, this.correctAnswersCount);
+                if (this.wrongAnswersCountThisRound >= this.failsNumToLose) {
+                    this.onLose(0, 0);
                     return true;
                 }
                 else {
@@ -413,6 +413,97 @@ var sh;
 (function (sh) {
     var screen;
     (function (screen) {
+        class DoorsWindow extends Phaser.GameObjects.Container {
+            constructor(scene) {
+                super(scene);
+                this._DoorR = new Phaser.GameObjects.Image(this.scene, 504.5, 158, 'Door R');
+                this._DoorR.setOrigin(0, 0);
+                this._DoorL = new Phaser.GameObjects.Image(this.scene, 313.5, 158, 'Door L');
+                this._DoorL.setOrigin(0, 0);
+                this._DoorInside = new Phaser.GameObjects.Image(this.scene, 313, 158, 'Door Inside');
+                this._DoorInside.setOrigin(0, 0);
+                this.add(this._DoorInside);
+                this.add(this._DoorR);
+                this.add(this._DoorL);
+            }
+            openDoor(door, duration, def_vertices_no_offset, vertXIndexes, vertYIndexes, vertYSign, tweenDoorValueY) {
+                door.visible = false;
+                let dx = 100, dy = 198;
+                let def_vertices = def_vertices_no_offset.slice();
+                for (let i = 0; i < def_vertices_no_offset.length; i += 2) {
+                    def_vertices[i] += dx;
+                }
+                for (let i = 1; i < def_vertices_no_offset.length; i += 2) {
+                    def_vertices[i] += dy;
+                }
+                let mesh = this.scene.make.mesh({
+                    key: door.texture.key,
+                    x: door.x,
+                    y: door.y,
+                    vertices: def_vertices.slice(),
+                    uv: [
+                        /*  U   |   V  */
+                        /* ----------- */
+                        0, 0,
+                        0, 1,
+                        1, 1,
+                        0, 0,
+                        1, 1,
+                        1, 0
+                    ]
+                });
+                mesh["def_vertices"] = def_vertices;
+                door["tweenDoorValueX"] = mesh["def_vertices"][vertXIndexes[0]];
+                door["tweenDoorValueY"] = 0;
+                this.scene.tweens.add({
+                    targets: door,
+                    tweenDoorValueX: -def_vertices_no_offset[vertXIndexes[0]] + dx,
+                    tweenDoorValueY: tweenDoorValueY,
+                    duration: duration,
+                    ease: Phaser.Math.Easing.Linear,
+                    onUpdate: () => {
+                        for (let k = 0; k < vertYIndexes.length; k++) {
+                            mesh.vertices[vertYIndexes[k]] = mesh["def_vertices"][vertYIndexes[k]] + vertYSign[k] * door["tweenDoorValueY"];
+                        }
+                        for (let i of vertXIndexes) {
+                            mesh.vertices[i] = door["tweenDoorValueX"];
+                        }
+                    }
+                });
+            }
+            open(onComplete) {
+                let duration = 2000;
+                let tweenDoorValueY = 50;
+                this.openDoor(this._DoorR, duration, [
+                    /*  X   |   Y  */
+                    /* ----------- */
+                    -this._DoorR.width / 2, -this._DoorR.height / 2,
+                    -this._DoorR.width / 2, this._DoorR.height / 2,
+                    this._DoorR.width / 2, this._DoorR.height / 2,
+                    -this._DoorR.width / 2, -this._DoorR.height / 2,
+                    this._DoorR.width / 2, this._DoorR.height / 2,
+                    this._DoorR.width / 2, -this._DoorR.height / 2
+                ], [0, 2, 6], [1, 3, 7], [-1, 1, -1], tweenDoorValueY);
+                this.openDoor(this._DoorL, duration, [
+                    /*  X   |   Y  */
+                    /* ----------- */
+                    -this._DoorL.width / 2, -this._DoorL.height / 2,
+                    -this._DoorL.width / 2, this._DoorL.height / 2,
+                    this._DoorL.width / 2, this._DoorL.height / 2,
+                    -this._DoorL.width / 2, -this._DoorL.height / 2,
+                    this._DoorL.width / 2, this._DoorL.height / 2,
+                    this._DoorL.width / 2, -this._DoorL.height / 2
+                ], [4, 8, 10], [5, 9, 11], [-1, -1, 1], -tweenDoorValueY);
+                setTimeout(onComplete, duration);
+            }
+        }
+        screen.DoorsWindow = DoorsWindow;
+    })(screen = sh.screen || (sh.screen = {}));
+})(sh || (sh = {}));
+var sh;
+(function (sh) {
+    var screen;
+    (function (screen) {
         class GameplayScreen extends Phaser.GameObjects.Container {
             constructor(scene, gameplay) {
                 super(scene);
@@ -435,11 +526,16 @@ var sh;
                         this.playBtnClickAnim(target);
                     });
                     this.setInputEnabled(false);
-                    delayedCall(750, () => {
-                        setPageBackground("bg-blue");
-                        this.add(completeWindow);
-                        completeWindow.show(score, starScore);
+                    delayedCall(1500, () => {
                         this.bgMusic.stop();
+                        this.doorsWindow.open(() => {
+                            this.scene.sound.add("Call to prayer").play();
+                            delayedCall(6000, () => {
+                                setPageBackground("bg-blue");
+                                this.add(completeWindow);
+                                completeWindow.show(score, starScore);
+                            });
+                        });
                     });
                 };
                 this.showLoseWindow = (score, starScore) => {
@@ -479,8 +575,11 @@ var sh;
                 this.gameplayContainer = new Phaser.GameObjects.Container(this.scene);
                 this.addAt(this.gameplayContainer, 0);
                 this.targetLetterLabel = new Phaser.GameObjects.Image(this.scene, 590, 90, null);
+                this.targetLetterLabel.tint = Math.round(0x000000 * 0.9);
+                this.doorsWindow = new screen.DoorsWindow(this.scene);
                 this.gameplayContainer.add([
                     this._gameStage,
+                    this.doorsWindow,
                     this._btnSound,
                     this._btnClose,
                     this.targetLetterLabel
@@ -489,10 +588,10 @@ var sh;
                 this.createGrid();
                 this.createCrescentMoons();
                 this.createInput();
-                this.shuffleOutHexagons();
+                this.showwOutGrid();
                 this.gameplay.setupCallbacks(this.showCompleteWindow, this.showLoseWindow);
             }
-            shuffleOutHexagons() {
+            showwOutGrid() {
                 this.setInputEnabled(false);
                 for (let i = 0; i < this.rows; i++) {
                     for (let j = 0; j < this.cols; j++) {
@@ -525,7 +624,7 @@ var sh;
                     }
                 });
             }
-            shuffleInHexagons() {
+            showInGrid(showOut) {
                 this.setInputEnabled(false);
                 for (let i = 0; i < this.rows; i++) {
                     for (let j = 0; j < this.cols; j++) {
@@ -541,9 +640,11 @@ var sh;
                         });
                     }
                 }
-                delayedCall(1000, () => {
-                    this.shuffleOutHexagons();
-                });
+                if (showOut) {
+                    delayedCall(1000, () => {
+                        this.showwOutGrid();
+                    });
+                }
             }
             createInput() {
                 for (let i = 0; i < this.rows; i++) {
@@ -551,22 +652,29 @@ var sh;
                         let c = this.grid[i][j];
                         c["bg"].on('pointerup', () => {
                             this.playBtnClickAnim(c);
-                            c["bg"].setTexture('rr_active');
                             let l = c["letter"];
                             if (l && l.texture.key == this.gameplay.getCorrectLetterName()) {
+                                c["bg"].setTexture('rr_active');
                                 let completed = this.onCorrectAnswer();
                                 if (!completed) {
                                     if (this.gameplay.isNewRound()) {
-                                        this.shuffleInHexagons();
+                                        this.showInGrid(true);
                                     }
+                                }
+                                else {
+                                    this.showInGrid(false);
                                 }
                             }
                             else {
+                                c["bg"].setTexture('rr_wrong');
                                 let lost = this.onWrongAnswer();
                                 if (!lost) {
                                     if (this.gameplay.isNewRound()) {
-                                        this.shuffleInHexagons();
+                                        this.showInGrid(true);
                                     }
+                                }
+                                else {
+                                    this.showInGrid(false);
                                 }
                             }
                         });
@@ -583,7 +691,7 @@ var sh;
             }
             createGrid() {
                 let startX = 355;
-                let startY = 200;
+                let startY = 215;
                 let dx = 76;
                 let dy = 71;
                 this.grid = [];
@@ -597,6 +705,7 @@ var sh;
                         c["letter"] = new Phaser.GameObjects.Image(this.scene, 0, 0, null);
                         c["letter"]["rectContainer"] = c;
                         c.add(c["letter"]);
+                        c["letter"].tint = Math.round(0x000000 * 0.9);
                         arr.push(c);
                     }
                     this.grid.push(arr);
@@ -622,28 +731,24 @@ var sh;
                     let cm = new Phaser.GameObjects.Image(this.scene, 179, 261 + i * dy, 'crescent_moon_def');
                     this.crescentMoons.push(cm);
                     this.gameplayContainer.add(cm);
-                    cm.visible = false;
                 }
             }
             resetCrescentMoons() {
                 for (let i = 0; i < this.crescentMoons.length; i++) {
                     this.setMoonsActive(i, false);
-                    this.crescentMoons[i].visible = false;
                 }
             }
             setMoonsActive(index, active) {
-                this.crescentMoons[index].visible = true;
                 this.crescentMoons[index].setTexture(active ? 'crescent_moon_active' : 'crescent_moon_def');
             }
             onCorrectAnswer() {
-                this.setMoonsActive(this.gameplay.getCurrentTotalAnswersCountThisRound(), true);
+                this.setMoonsActive(this.gameplay.correctAnswersCountThisRound, true);
                 let completed = this.gameplay.onCorrectAnswer();
                 this.soundGooseYes = this.scene.sound.add("Goose Yes");
                 this.soundGooseYes.play();
                 return completed;
             }
             onWrongAnswer() {
-                this.setMoonsActive(this.gameplay.getCurrentTotalAnswersCountThisRound(), false);
                 let lost = this.gameplay.onWrongAnswer();
                 this.soundGooseNo = this.scene.sound.add("Goose no");
                 this.soundGooseNo.play();
@@ -693,7 +798,7 @@ var sh;
                     if (this.wfsnd) {
                         this.wfsnd.stop();
                     }
-                    this.wfsnd = this.scene.sound.add("Welcome Find the sound");
+                    this.wfsnd = this.scene.sound.add("Unlock the Gate Open the mosque gate by entering the passcode.");
                     this.wfsnd.play();
                 };
                 this.instructionPage = new screen.InstructionPage(this.scene, (target) => {
@@ -781,7 +886,7 @@ var sh;
                 this._btnPlay.setInteractive({ cursor: 'pointer' });
                 this._btnPlay.once('pointerup', onPlayClick);
                 setupButtonTextureBased(this._btnPlay, 'btnPLAY1', 'btnPLAY2');
-                this.instrTxt = this.scene.add.text(game.scale.width / 2, game.scale.height / 2, "Find the sound.", {
+                this.instrTxt = this.scene.add.text(game.scale.width / 2, game.scale.height / 2, "Open the mosque gate\nby entering the passcode.", {
                     "fontFamily": "Kids Rock Demo",
                     "fontSize": 37,
                     "color": "#A25122",

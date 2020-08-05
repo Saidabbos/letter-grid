@@ -22,7 +22,7 @@ namespace sh.screen {
             this._btnPlay.once('pointerup', onPlayClick);
             setupButtonTextureBased(this._btnPlay, 'btnPLAY1', 'btnPLAY2');
 
-            this.instrTxt = this.scene.add.text(game.scale.width / 2, game.scale.height / 2, "Find the sound.", {
+            this.instrTxt = this.scene.add.text(game.scale.width / 2, game.scale.height / 2, "Open the mosque gate\nby entering the passcode.", {
                 "fontFamily": "Kids Rock Demo",
                 "fontSize": 37,
                 "color": "#A25122",

@@ -270,12 +270,36 @@
         "url": "assets/imgs/crescent_moon_def.png",
         "overwrite": false
       },
+      {
+        "type": "image",
+        "key": "Door R",
+        "url": "assets/imgs/Door R.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "Door L",
+        "url": "assets/imgs/Door L.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "Door Inside",
+        "url": "assets/imgs/Door Inside.png",
+        "overwrite": false
+      },
+      {
+        "type": "image",
+        "key": "rr_wrong",
+        "url": "assets/imgs/rr_wrong.png",
+        "overwrite": false
+      },
 
       {"type":"audio","key":"Activity completion fantastic","url":["assets/sound/mp3/Activity completion fantastic.mp3"],"autoDecode":true},
       {"type":"audio","key":"activity selection - button selection","url":["assets/sound/mp3/activity selection - button selection.mp3"],"autoDecode":true},
       {"type":"audio","key":"button hover","url":["assets/sound/mp3/button hover.mp3"],"autoDecode":true},
       {"type":"audio","key":"Fail - close one","url":["assets/sound/mp3/Fail - close one.mp3"],"autoDecode":true},
-      {"type":"audio","key":"Welcome Find the sound","url":["assets/sound/mp3/Welcome Find the sound.mp3"],"autoDecode":true},
+      {"type":"audio","key":"Unlock the Gate Open the mosque gate by entering the passcode.","url":["assets/sound/mp3/Unlock the Gate Open the mosque gate by entering the passcode..mp3"],"autoDecode":true},
       {"type":"audio","key":"bg_sound","url":["assets/sound/mp3/bg_sound.mp3","assets/sound/ogg/bg_sound.ogg"],"autoDecode":true},
       {"type":"audio","key":"Goose no","url":["assets/sound/mp3/Goose no.mp3","assets/sound/ogg/Goose no.ogg"],"autoDecode":true},
       {"type":"audio","key":"Goose Yes","url":["assets/sound/mp3/Goose Yes.mp3","assets/sound/ogg/Goose Yes.ogg"],"autoDecode":true},
@@ -294,7 +318,8 @@
       {"type":"audio","key":"translate_ه","url":["assets/sound/mp3/letters/translate_ه.mp3"],"autoDecode":true},
       {"type":"audio","key":"translate_و","url":["assets/sound/mp3/letters/translate_و.mp3"],"autoDecode":true},
       {"type":"audio","key":"translate_ي","url":["assets/sound/mp3/letters/translate_ي.mp3"],"autoDecode":true},
-      {"type":"audio","key":"translate_click_on","url":["assets/sound/mp3/letters/translate_click_on.mp3"],"autoDecode":true}
+      {"type":"audio","key":"translate_click_on","url":["assets/sound/mp3/letters/translate_click_on.mp3"],"autoDecode":true},
+      {"type":"audio","key":"Call to prayer","url":["assets/sound/mp3/Call to prayer.mp3"],"autoDecode":true}
     ]
   },
   "meta": {

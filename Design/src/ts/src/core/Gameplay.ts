@@ -76,8 +76,8 @@ namespace sh.core {
             this.wrongAnswersCount++;
             this.wrongAnswersCountThisRound++;
 
-            if (this.wrongAnswersCount >= this.failsNumToLose) {
-                this.onLose(this.correctAnswersCount, this.correctAnswersCount);
+            if (this.wrongAnswersCountThisRound >= this.failsNumToLose) {
+                this.onLose(0, 0);
                 return true;
             } else {
                 this.onLetterChosen();

@@ -6,7 +6,7 @@ namespace sh {
 
         constructor() {
             let config: Phaser.Types.Core.GameConfig = {
-                type: Phaser.AUTO,
+                type: Phaser.WEBGL,
                 width: App.CANVAS_WIDTH,
                 height: App.CANVAS_HEIGHT,
                 scale: {

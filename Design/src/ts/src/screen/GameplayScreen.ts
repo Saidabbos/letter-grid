@@ -20,6 +20,8 @@ namespace sh.screen {
 
         private bgMusic:any = null;
 
+        private doorsWindow:DoorsWindow;
+
         constructor(scene: Phaser.Scene, gameplay: Gameplay) {
             super(scene);
             this.gameplay = gameplay;window["t"]=this;
@@ -46,9 +48,13 @@ namespace sh.screen {
             this.addAt(this.gameplayContainer, 0);
 
             this.targetLetterLabel = new Phaser.GameObjects.Image(this.scene, 590, 90, null);
+            this.targetLetterLabel.tint = Math.round(0x000000 * 0.9);
+
+            this.doorsWindow = new DoorsWindow(this.scene);
 
             this.gameplayContainer.add([
                 this._gameStage,
+                this.doorsWindow,
                 this._btnSound,
                 this._btnClose,
                 this.targetLetterLabel
@@ -58,11 +64,11 @@ namespace sh.screen {
             this.createGrid();
             this.createCrescentMoons();
             this.createInput();
-            this.shuffleOutHexagons();
+            this.showwOutGrid();
             this.gameplay.setupCallbacks(this.showCompleteWindow, this.showLoseWindow);
         }
 
-        public shuffleOutHexagons():void {
+        public showwOutGrid():void {
             this.setInputEnabled(false);
 
             for (let i:number = 0; i < this.rows; i++) {
@@ -99,7 +105,7 @@ namespace sh.screen {
             });
         }
 
-        private shuffleInHexagons():void {
+        private showInGrid(showOut:boolean):void {
             this.setInputEnabled(false);
 
             for (let i:number = 0; i < this.rows; i++) {
@@ -117,9 +123,11 @@ namespace sh.screen {
                 }
             }
 
-            delayedCall(1000, ()=>{
-                this.shuffleOutHexagons();
-            });
+            if (showOut) {
+                delayedCall(1000, ()=>{
+                    this.showwOutGrid();
+                });
+            }
         }
 
         public createInput(): void {
@@ -128,22 +136,27 @@ namespace sh.screen {
                     let c = this.grid[i][j];
                     c["bg"].on('pointerup', () => {
                         this.playBtnClickAnim(c);
-                        c["bg"].setTexture('rr_active');
 
                         let l = c["letter"];
                         if (l && l.texture.key == this.gameplay.getCorrectLetterName()) {
+                            c["bg"].setTexture('rr_active');
                             let completed:boolean = this.onCorrectAnswer();
                             if (!completed) {
                                 if (this.gameplay.isNewRound()) {
-                                    this.shuffleInHexagons();
+                                    this.showInGrid(true);
                                 }
+                            } else {
+                                this.showInGrid(false);
                             }
                         } else {
+                            c["bg"].setTexture('rr_wrong');
                             let lost:boolean = this.onWrongAnswer();
                             if (!lost) {
                                 if (this.gameplay.isNewRound()) {
-                                    this.shuffleInHexagons();
+                                    this.showInGrid(true);
                                 }
+                            } else {
+                                this.showInGrid(false);
                             }
                         }
                     });
@@ -167,7 +180,7 @@ namespace sh.screen {
 
         public createGrid():void {
             let startX:number = 355;
-            let startY:number = 200;
+            let startY:number = 215;
             let dx:number = 76;
             let dy:number = 71;
             this.grid = [];
@@ -181,6 +194,7 @@ namespace sh.screen {
                     c["letter"] = new Phaser.GameObjects.Image(this.scene, 0, 0, null);
                     c["letter"]["rectContainer"] = c;
                     c.add(c["letter"]);
+                    c["letter"].tint = Math.round(0x000000 * 0.9);
                     arr.push(c);
                 }
                 this.grid.push(arr);
@@ -209,25 +223,22 @@ namespace sh.screen {
                 let cm = new Phaser.GameObjects.Image(this.scene, 179, 261 + i * dy, 'crescent_moon_def');
                 this.crescentMoons.push(cm);
                 this.gameplayContainer.add(cm);
-                cm.visible = false;
             }
         }
 
         public resetCrescentMoons():void {
             for (let i:number = 0; i < this.crescentMoons.length; i++) {
                 this.setMoonsActive(i, false);
-                this.crescentMoons[i].visible = false;
             }
         }
 
         public setMoonsActive(index:number, active:boolean):void {
-            this.crescentMoons[index].visible = true;
             this.crescentMoons[index].setTexture(active ? 'crescent_moon_active' : 'crescent_moon_def')
         }
 
         private soundGooseYes = null;
         public onCorrectAnswer(): boolean {
-            this.setMoonsActive(this.gameplay.getCurrentTotalAnswersCountThisRound(), true);
+            this.setMoonsActive(this.gameplay.correctAnswersCountThisRound, true);
 
             let completed:boolean = this.gameplay.onCorrectAnswer();
 
@@ -239,8 +250,6 @@ namespace sh.screen {
 
         private soundGooseNo = null;
         public onWrongAnswer(): boolean {
-            this.setMoonsActive(this.gameplay.getCurrentTotalAnswersCountThisRound(), false);
-
             let lost:boolean = this.gameplay.onWrongAnswer();
 
             this.soundGooseNo = this.scene.sound.add("Goose no");
@@ -300,7 +309,7 @@ namespace sh.screen {
                 if (this.wfsnd) {
                     this.wfsnd.stop();
                 }
-                this.wfsnd = this.scene.sound.add("Welcome Find the sound");
+                this.wfsnd = this.scene.sound.add("Unlock the Gate Open the mosque gate by entering the passcode.");
                 this.wfsnd.play();
             };
 
@@ -350,13 +359,20 @@ namespace sh.screen {
                 this.playBtnClickAnim(target);
             });
             this.setInputEnabled(false);
-            delayedCall(750, () => {
-                setPageBackground("bg-blue");
 
-                this.add(completeWindow);
-                completeWindow.show(score, starScore);
-
+            delayedCall(1500, () => {
                 this.bgMusic.stop();
+
+                this.doorsWindow.open(()=>{
+                    this.scene.sound.add("Call to prayer").play();
+
+                    delayedCall(6000, () => {
+                        setPageBackground("bg-blue");
+
+                        this.add(completeWindow);
+                        completeWindow.show(score, starScore);
+                    });
+                });
             });
         };
 
