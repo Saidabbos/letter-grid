@@ -53,7 +53,7 @@ namespace sh.screen {
             door["tweenDoorValueY"] = 0;
             this.scene.tweens.add({
                 targets: door,
-                tweenDoorValueX: -def_vertices_no_offset[vertXIndexes[0]] + dx,
+                tweenDoorValueX: -def_vertices_no_offset[vertXIndexes[0]] * 0.6 + dx,
                 tweenDoorValueY: tweenDoorValueY,
                 duration: duration,
                 ease: Phaser.Math.Easing.Linear,
@@ -66,6 +66,7 @@ namespace sh.screen {
                     }
                 }
             });
+            this.add(mesh);
         }
 
         public open(onComplete:()=>void):void {

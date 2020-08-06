@@ -94,11 +94,11 @@ namespace sh.core {
         }
 
         public isNewRound():boolean {
-            return this.getCurrentTotalAnswersCount() % this.choicesNumPerRound == 0;
+            return this.correctAnswersCount % this.choicesNumPerRound == 0;
         }
 
         public isRoundsComplete():boolean {
-            return this.getCurrentTotalAnswersCount() / this.choicesNumPerRound >= this.totalRoundsNum;
+            return this.correctAnswersCount / this.choicesNumPerRound >= this.totalRoundsNum;
         }
 
         private randomizeGrid():void {

@@ -198,10 +198,10 @@ var sh;
                 return this.correctAnswersCountThisRound + this.wrongAnswersCountThisRound;
             }
             isNewRound() {
-                return this.getCurrentTotalAnswersCount() % this.choicesNumPerRound == 0;
+                return this.correctAnswersCount % this.choicesNumPerRound == 0;
             }
             isRoundsComplete() {
-                return this.getCurrentTotalAnswersCount() / this.choicesNumPerRound >= this.totalRoundsNum;
+                return this.correctAnswersCount / this.choicesNumPerRound >= this.totalRoundsNum;
             }
             randomizeGrid() {
                 let _letters = this.letters.slice();
@@ -457,7 +457,7 @@ var sh;
                 door["tweenDoorValueY"] = 0;
                 this.scene.tweens.add({
                     targets: door,
-                    tweenDoorValueX: -def_vertices_no_offset[vertXIndexes[0]] + dx,
+                    tweenDoorValueX: -def_vertices_no_offset[vertXIndexes[0]] * 0.6 + dx,
                     tweenDoorValueY: tweenDoorValueY,
                     duration: duration,
                     ease: Phaser.Math.Easing.Linear,
@@ -470,6 +470,7 @@ var sh;
                         }
                     }
                 });
+                this.add(mesh);
             }
             open(onComplete) {
                 let duration = 2000;
@@ -886,14 +887,13 @@ var sh;
                 this._btnPlay.setInteractive({ cursor: 'pointer' });
                 this._btnPlay.once('pointerup', onPlayClick);
                 setupButtonTextureBased(this._btnPlay, 'btnPLAY1', 'btnPLAY2');
-                this.instrTxt = this.scene.add.text(game.scale.width / 2, game.scale.height / 2, "Open the mosque gate\nby entering the passcode.", {
+                this.instrTxt = this.scene.add.text(game.scale.width / 2, game.scale.height / 2, "Open the mosque gate by entering\nthe passcode.", {
                     "fontFamily": "Kids Rock Demo",
-                    "fontSize": 37,
-                    "color": "#A25122",
-                    "align": 'center',
-                    'stroke': '#FFFFFF',
-                    'strokeThickness': 6,
+                    "fontSize": 30,
+                    "color": "#43425D",
+                    "align": 'center'
                 });
+                this.instrTxt.setLineSpacing(20);
                 this.instrTxt.setOrigin(0.5, 0.5);
                 this._btnSoundInstruction = new Phaser.GameObjects.Image(this.scene, 800 - 105, 156 - 50, 'Sound');
                 this._btnSoundInstruction.setInteractive({ cursor: 'pointer' });
@@ -986,3 +986,4 @@ var sh;
         screen.TryAgainWindow = TryAgainWindow;
     })(screen = sh.screen || (sh.screen = {}));
 })(sh || (sh = {}));
+//# sourceMappingURL=main.js.map
