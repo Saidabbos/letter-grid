@@ -136,6 +136,7 @@ namespace sh.screen {
                     let c = this.grid[i][j];
                     c["bg"].on('pointerup', () => {
                         this.playBtnClickAnim(c);
+                        c["bg"].disableInteractive();
 
                         let l = c["letter"];
                         if (l && l.texture.key == this.gameplay.getCorrectLetterName()) {

@@ -34,7 +34,7 @@ namespace sh.core {
         }
 
         public onLetterChosen():boolean {
-            if (this.isNewRound()) {
+            if (this.correctAnswersCountThisRound == this.choicesNumPerRound) {
                 this.currentRound++;
                 if (this.currentRound >= this.totalRoundsNum) {
                     this.onComplete(this.correctAnswersCount, this.correctAnswersCount);
@@ -94,11 +94,11 @@ namespace sh.core {
         }
 
         public isNewRound():boolean {
-            return this.correctAnswersCount % this.choicesNumPerRound == 0;
+            return this.getCurrentTotalAnswersCountThisRound() == 0;
         }
 
         public isRoundsComplete():boolean {
-            return this.correctAnswersCount / this.choicesNumPerRound >= this.totalRoundsNum;
+            return this.getCurrentTotalAnswersCount() / this.choicesNumPerRound >= this.totalRoundsNum;
         }
 
         private randomizeGrid():void {

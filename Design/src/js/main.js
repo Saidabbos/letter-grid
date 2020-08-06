@@ -145,7 +145,7 @@ var sh;
                 this.onLose = onLose;
             }
             onLetterChosen() {
-                if (this.isNewRound()) {
+                if (this.correctAnswersCountThisRound == this.choicesNumPerRound) {
                     this.currentRound++;
                     if (this.currentRound >= this.totalRoundsNum) {
                         this.onComplete(this.correctAnswersCount, this.correctAnswersCount);
@@ -198,10 +198,10 @@ var sh;
                 return this.correctAnswersCountThisRound + this.wrongAnswersCountThisRound;
             }
             isNewRound() {
-                return this.correctAnswersCount % this.choicesNumPerRound == 0;
+                return this.getCurrentTotalAnswersCountThisRound() == 0;
             }
             isRoundsComplete() {
-                return this.correctAnswersCount / this.choicesNumPerRound >= this.totalRoundsNum;
+                return this.getCurrentTotalAnswersCount() / this.choicesNumPerRound >= this.totalRoundsNum;
             }
             randomizeGrid() {
                 let _letters = this.letters.slice();
@@ -653,6 +653,7 @@ var sh;
                         let c = this.grid[i][j];
                         c["bg"].on('pointerup', () => {
                             this.playBtnClickAnim(c);
+                            c["bg"].disableInteractive();
                             let l = c["letter"];
                             if (l && l.texture.key == this.gameplay.getCorrectLetterName()) {
                                 c["bg"].setTexture('rr_active');
@@ -986,4 +987,3 @@ var sh;
         screen.TryAgainWindow = TryAgainWindow;
     })(screen = sh.screen || (sh.screen = {}));
 })(sh || (sh = {}));
-//# sourceMappingURL=main.js.map
