@@ -67,6 +67,8 @@ namespace sh.screen {
                 }
             });
             this.add(mesh);
+
+            this.scene.sound.add('Door opening').play();
         }
 
         public open(onComplete:()=>void):void {

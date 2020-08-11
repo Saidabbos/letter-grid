@@ -471,6 +471,7 @@ var sh;
                     }
                 });
                 this.add(mesh);
+                this.scene.sound.add('Door opening').play();
             }
             open(onComplete) {
                 let duration = 2000;
@@ -561,7 +562,7 @@ var sh;
             }
             showGameplay() {
                 setPageBackground("bg-australia");
-                this.bgMusic = this.scene.sound.add("bg_sound");
+                this.bgMusic = this.scene.sound.add("B-g ambience");
                 this.bgMusic.play();
                 this.bgMusic.loop = true;
                 this._gameStage = new Phaser.GameObjects.Image(this.scene, game.scale.width / 2, game.scale.height / 2, '3 Letter Grid');
@@ -746,13 +747,13 @@ var sh;
             onCorrectAnswer() {
                 this.setMoonsActive(this.gameplay.correctAnswersCountThisRound, true);
                 let completed = this.gameplay.onCorrectAnswer();
-                this.soundGooseYes = this.scene.sound.add("Goose Yes");
+                this.soundGooseYes = this.scene.sound.add("Correct click");
                 this.soundGooseYes.play();
                 return completed;
             }
             onWrongAnswer() {
                 let lost = this.gameplay.onWrongAnswer();
-                this.soundGooseNo = this.scene.sound.add("Goose no");
+                this.soundGooseNo = this.scene.sound.add("Incorrect click");
                 this.soundGooseNo.play();
                 return lost;
             }
@@ -783,6 +784,7 @@ var sh;
             }
             onCloseClick() {
                 this.showAreYouSurePage();
+                this.scene.sound.add('warning page pop up sfx').play();
             }
             playBtnClickAnim(target) {
                 target.scaleX = target.scaleY = 1;

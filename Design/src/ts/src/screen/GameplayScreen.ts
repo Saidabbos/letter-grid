@@ -30,7 +30,7 @@ namespace sh.screen {
         public showGameplay(): void {
             setPageBackground("bg-australia");
 
-            this.bgMusic = this.scene.sound.add("bg_sound");
+            this.bgMusic = this.scene.sound.add("B-g ambience");
             this.bgMusic.play();
             this.bgMusic.loop = true;
 
@@ -243,7 +243,7 @@ namespace sh.screen {
 
             let completed:boolean = this.gameplay.onCorrectAnswer();
 
-            this.soundGooseYes = this.scene.sound.add("Goose Yes");
+            this.soundGooseYes = this.scene.sound.add("Correct click");
             this.soundGooseYes.play();
 
             return completed;
@@ -253,7 +253,7 @@ namespace sh.screen {
         public onWrongAnswer(): boolean {
             let lost:boolean = this.gameplay.onWrongAnswer();
 
-            this.soundGooseNo = this.scene.sound.add("Goose no");
+            this.soundGooseNo = this.scene.sound.add("Incorrect click");
             this.soundGooseNo.play();
 
             return lost;
@@ -288,6 +288,7 @@ namespace sh.screen {
 
         public onCloseClick(): void {
             this.showAreYouSurePage();
+            this.scene.sound.add('warning page pop up sfx').play();
         }
 
         private playBtnClickAnim(target): void {
