@@ -64,13 +64,14 @@ namespace sh.screen {
             this.createGrid();
             this.createCrescentMoons();
             this.createInput();
-            this.showwOutGrid();
+            this.showOutGrid();
             this.gameplay.setupCallbacks(this.showCompleteWindow, this.showLoseWindow);
         }
 
-        public showwOutGrid():void {
+        public showOutGrid():void {
             this.setInputEnabled(false);
 
+            let delay:number = 700;
             for (let i:number = 0; i < this.rows; i++) {
                 for (let j:number = 0; j < this.cols; j++) {
                     let c = this.grid[i][j];
@@ -79,10 +80,14 @@ namespace sh.screen {
                         targets: c,
                         "scale": 1,
                         duration: 300,
-                        delay: 700
+                        delay: delay
                     });
                 }
             }
+
+            delayedCall(delay, ()=>{
+                this.scene.sound.add("open").play();
+            });
 
             this.targetLetterLabel.visible = false;
             this.resetCrescentMoons();
@@ -108,6 +113,7 @@ namespace sh.screen {
         private showInGrid(showOut:boolean):void {
             this.setInputEnabled(false);
 
+            let delay:number = 700;
             for (let i:number = 0; i < this.rows; i++) {
                 for (let j:number = 0; j < this.cols; j++) {
                     let c = this.grid[i][j];
@@ -115,7 +121,7 @@ namespace sh.screen {
                         targets: c,
                         "scale": 0,
                         duration: 300,
-                        delay: 700,
+                        delay: delay,
                         onComplete:()=>{
                             c["bg"].setTexture('rr_def');
                         }
@@ -123,9 +129,13 @@ namespace sh.screen {
                 }
             }
 
+            delayedCall(delay, ()=>{
+                this.scene.sound.add("close").play();
+            });
+
             if (showOut) {
                 delayedCall(1000, ()=>{
-                    this.showwOutGrid();
+                    this.showOutGrid();
                 });
             }
         }

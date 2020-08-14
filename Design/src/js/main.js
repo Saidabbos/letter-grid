@@ -132,7 +132,6 @@ var sh;
                 this.totalRoundsNum = 2;
                 this.failsNumToLose = 3;
                 this.choicesNumPerRound = 5;
-                // public readonly allLettersNames:string[] = ["أ","ث","ج","د ","ش","ص","ظ","ع","غ","ق","ك","م","ه","و","ي"];
                 this.currentRound = 0;
                 this.currentLetter = null;
                 this.correctAnswersCount = 0;
@@ -144,11 +143,15 @@ var sh;
                 this.onComplete = onComplete;
                 this.onLose = onLose;
             }
+            calculateScore() {
+                return this.choicesNumPerRound * this.totalRoundsNum - this.wrongAnswersCount;
+            }
             onLetterChosen() {
                 if (this.correctAnswersCountThisRound == this.choicesNumPerRound) {
                     this.currentRound++;
                     if (this.currentRound >= this.totalRoundsNum) {
-                        this.onComplete(this.correctAnswersCount, this.correctAnswersCount);
+                        let score = this.calculateScore();
+                        this.onComplete(score, score);
                         return true;
                     }
                     else {
@@ -207,24 +210,32 @@ var sh;
                 let _letters = this.letters.slice();
                 this.gridLettersNames = [];
                 let correctLetterName = this.getCorrectLetterName();
-                for (let k = 0; k < this.totalLettersCount / this.choicesNumPerRound - 1; k++) {
-                    let rndLetterName = Phaser.Utils.Array.RemoveRandomElement(_letters);
-                    for (let i = 0; i < this.choicesNumPerRound; i++) {
-                        this.gridLettersNames.push(rndLetterName['correctLetterName']);
-                    }
-                }
                 for (let i = 0; i < this.choicesNumPerRound; i++) {
                     this.gridLettersNames.push(correctLetterName);
+                }
+                let differentLettersNum = 10;
+                let differentLettersRepeating = (this.totalLettersCount - this.choicesNumPerRound) / differentLettersNum;
+                for (let i = 0; i < differentLettersNum; i++) {
+                    let rndLetter = Phaser.Utils.Array.RemoveRandomElement(_letters);
+                    for (let k = 0; k < differentLettersRepeating; k++) {
+                        this.gridLettersNames.push(rndLetter['correctLetterName']);
+                    }
                 }
             }
             reset() {
                 let json = game.cache.json.get('gameplay');
                 this.letters = json["letters"].slice();
-                let _letters = this.letters.slice();
+                let correctLetters = json["correctLetters"];
                 this.roundsLetter = [];
-                for (let i = 0; i < this.totalRoundsNum; i++) {
-                    this.roundsLetter.push(Phaser.Utils.Array.RemoveRandomElement(_letters));
+                for (let l of correctLetters) {
+                    for (let i = this.letters.length - 1; i >= 0; i--) {
+                        if (this.letters[i]['correctLetterName'] == l) {
+                            this.roundsLetter.push(this.letters[i]);
+                            this.letters.splice(i, 1);
+                        }
+                    }
                 }
+                this.totalRoundsNum = this.roundsLetter.length;
                 this.nextLetter();
                 this.currentRound = 0;
                 this.correctAnswersCount = 0;
@@ -590,11 +601,12 @@ var sh;
                 this.createGrid();
                 this.createCrescentMoons();
                 this.createInput();
-                this.showwOutGrid();
+                this.showOutGrid();
                 this.gameplay.setupCallbacks(this.showCompleteWindow, this.showLoseWindow);
             }
-            showwOutGrid() {
+            showOutGrid() {
                 this.setInputEnabled(false);
+                let delay = 700;
                 for (let i = 0; i < this.rows; i++) {
                     for (let j = 0; j < this.cols; j++) {
                         let c = this.grid[i][j];
@@ -603,10 +615,13 @@ var sh;
                             targets: c,
                             "scale": 1,
                             duration: 300,
-                            delay: 700
+                            delay: delay
                         });
                     }
                 }
+                delayedCall(delay, () => {
+                    this.scene.sound.add("open").play();
+                });
                 this.targetLetterLabel.visible = false;
                 this.resetCrescentMoons();
                 this.randomizeGrid();
@@ -628,6 +643,7 @@ var sh;
             }
             showInGrid(showOut) {
                 this.setInputEnabled(false);
+                let delay = 700;
                 for (let i = 0; i < this.rows; i++) {
                     for (let j = 0; j < this.cols; j++) {
                         let c = this.grid[i][j];
@@ -635,16 +651,19 @@ var sh;
                             targets: c,
                             "scale": 0,
                             duration: 300,
-                            delay: 700,
+                            delay: delay,
                             onComplete: () => {
                                 c["bg"].setTexture('rr_def');
                             }
                         });
                     }
                 }
+                delayedCall(delay, () => {
+                    this.scene.sound.add("close").play();
+                });
                 if (showOut) {
                     delayedCall(1000, () => {
-                        this.showwOutGrid();
+                        this.showOutGrid();
                     });
                 }
             }

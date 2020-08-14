@@ -3,11 +3,9 @@ namespace sh.core {
 
         private totalLettersCount:number = 25;
 
-        public readonly totalRoundsNum:number = 2;
+        public totalRoundsNum:number = 2;
         public readonly failsNumToLose:number = 3;
         public readonly choicesNumPerRound:number = 5;
-
-        // public readonly allLettersNames:string[] = ["أ","ث","ج","د ","ش","ص","ظ","ع","غ","ق","ك","م","ه","و","ي"];
 
         private currentRound:number = 0;
         private currentLetter:object = null;
@@ -33,11 +31,16 @@ namespace sh.core {
             this.onLose = onLose;
         }
 
+        public calculateScore():number {
+            return this.choicesNumPerRound * this.totalRoundsNum - this.wrongAnswersCount;
+        }
+
         public onLetterChosen():boolean {
             if (this.correctAnswersCountThisRound == this.choicesNumPerRound) {
                 this.currentRound++;
                 if (this.currentRound >= this.totalRoundsNum) {
-                    this.onComplete(this.correctAnswersCount, this.correctAnswersCount);
+                    let score:number = this.calculateScore();
+                    this.onComplete(score, score);
                     return true;
                 } else {
                     this.nextLetter();
@@ -105,26 +108,36 @@ namespace sh.core {
             let _letters:object[] = this.letters.slice();
             this.gridLettersNames = [];
             let correctLetterName = this.getCorrectLetterName();
-            for (let k:number = 0; k < this.totalLettersCount / this.choicesNumPerRound - 1; k++) {
-                let rndLetterName = Phaser.Utils.Array.RemoveRandomElement(_letters);
-                for (let i:number = 0; i < this.choicesNumPerRound; i++) {
-                    this.gridLettersNames.push(rndLetterName['correctLetterName']);
-                }
-            }
             for (let i:number = 0; i < this.choicesNumPerRound; i++) {
                 this.gridLettersNames.push(correctLetterName);
+            }
+            let differentLettersNum:number = 10;
+            let differentLettersRepeating:number = (this.totalLettersCount - this.choicesNumPerRound) / differentLettersNum;
+            for (let i:number = 0; i < differentLettersNum; i++) {
+                let rndLetter = Phaser.Utils.Array.RemoveRandomElement(_letters);
+                for (let k:number = 0; k < differentLettersRepeating; k++) {
+                    this.gridLettersNames.push(rndLetter['correctLetterName']);
+                }
             }
         }
 
         public reset():void {
             let json = game.cache.json.get('gameplay');
             this.letters = json["letters"].slice();
+            let correctLetters:string[] = json["correctLetters"];
 
-            let _letters = this.letters.slice();
             this.roundsLetter = [];
-            for (let i:number = 0; i < this.totalRoundsNum; i++) {
-                this.roundsLetter.push(Phaser.Utils.Array.RemoveRandomElement(_letters));
+
+            for (let l of correctLetters) {
+                for (let i:number = this.letters.length - 1; i >= 0; i--) {
+                    if (this.letters[i]['correctLetterName'] == l) {
+                        this.roundsLetter.push(this.letters[i]);
+                        this.letters.splice(i, 1);
+                    }
+                }
             }
+
+            this.totalRoundsNum = this.roundsLetter.length;
 
             this.nextLetter();
 

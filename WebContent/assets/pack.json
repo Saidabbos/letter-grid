@@ -295,6 +295,8 @@
         "overwrite": false
       },
 
+      {"type":"audio","key":"close","url":["assets/sound/mp3/close.mp3"],"autoDecode":true},
+      {"type":"audio","key":"open","url":["assets/sound/mp3/open.mp3"],"autoDecode":true},
       {"type":"audio","key":"warning page pop up sfx","url":["assets/sound/mp3/warning page pop up sfx.mp3"],"autoDecode":true},
       {"type":"audio","key":"Activity completion fantastic","url":["assets/sound/mp3/Activity completion fantastic.mp3"],"autoDecode":true},
       {"type":"audio","key":"activity selection - button selection","url":["assets/sound/mp3/activity selection - button selection.mp3"],"autoDecode":true},

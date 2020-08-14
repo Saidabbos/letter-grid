@@ -15,5 +15,6 @@
 		{"correctLetterName":"ه", "correctAudioKey":"translate_ه"},
 		{"correctLetterName":"و", "correctAudioKey":"translate_و"},
 		{"correctLetterName":"ي", "correctAudioKey":"translate_ي"}
-	]
+	],
+  "correctLetters": ["ص","ث"]
 }
