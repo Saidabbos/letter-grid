@@ -16,5 +16,14 @@
 		{"correctLetterName":"و", "correctAudioKey":"translate_و"},
 		{"correctLetterName":"ي", "correctAudioKey":"translate_ي"}
 	],
-  "correctLetters": ["ص","ث"]
+	"rounds": [
+		{
+			"correctLetter": "ص",
+			"wrongLetters": ["أ","أ","ث","ث","ث","ي","ي","ي","و","و","و","غ","غ","غ","ج","ج","ظ","ظ","ك","ك"]
+		},
+		{
+			"correctLetter":"ث",
+			"wrongLetters": ["أ","أ","م","م","م","ي","ي","ع","ع","و","و","غ","غ","غ","ج","ج","ظ","ظ","ك","ك"]
+		}
+	]
 }

@@ -17,6 +17,7 @@ namespace sh.core {
         public wrongAnswersCountThisRound: number = 0;
 
         private roundsLetter:object[];
+        private roundsWrongLetters:object[][];
 
         public gridLettersNames:string[];
 
@@ -105,36 +106,38 @@ namespace sh.core {
         }
 
         private randomizeGrid():void {
-            let _letters:object[] = this.letters.slice();
             this.gridLettersNames = [];
+
             let correctLetterName = this.getCorrectLetterName();
             for (let i:number = 0; i < this.choicesNumPerRound; i++) {
                 this.gridLettersNames.push(correctLetterName);
             }
-            let differentLettersNum:number = 10;
-            let differentLettersRepeating:number = (this.totalLettersCount - this.choicesNumPerRound) / differentLettersNum;
-            for (let i:number = 0; i < differentLettersNum; i++) {
-                let rndLetter = Phaser.Utils.Array.RemoveRandomElement(_letters);
-                for (let k:number = 0; k < differentLettersRepeating; k++) {
-                    this.gridLettersNames.push(rndLetter['correctLetterName']);
-                }
+
+            let rwl:any = Phaser.Utils.Array.RemoveRandomElement(this.roundsWrongLetters);
+            for (let wl of rwl) {
+                this.gridLettersNames.push(wl);
             }
         }
 
         public reset():void {
             let json = game.cache.json.get('gameplay');
             this.letters = json["letters"].slice();
+            let rounds = json["rounds"];
             let correctLetters:string[] = json["correctLetters"];
 
             this.roundsLetter = [];
+            this.roundsWrongLetters = [];
 
-            for (let l of correctLetters) {
+            for (let r of rounds) {
+                let l:string = r["correctLetter"];
                 for (let i:number = this.letters.length - 1; i >= 0; i--) {
                     if (this.letters[i]['correctLetterName'] == l) {
                         this.roundsLetter.push(this.letters[i]);
-                        this.letters.splice(i, 1);
+                        break;
                     }
                 }
+
+                this.roundsWrongLetters.push(r["wrongLetters"]);
             }
 
             this.totalRoundsNum = this.roundsLetter.length;
