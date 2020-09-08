@@ -241,7 +241,7 @@ namespace sh.screen {
                     similarity++;
                 }
             }
-            console.log("sim: ",similarity);
+            // console.log("sim: ",similarity);
             return similarity;
         }
 

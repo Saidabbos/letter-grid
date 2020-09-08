@@ -759,7 +759,7 @@ var sh;
                         similarity++;
                     }
                 }
-                console.log("sim: ", similarity);
+                // console.log("sim: ",similarity);
                 return similarity;
             }
             updateClickLetterTargetLabel() {
