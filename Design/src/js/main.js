@@ -734,13 +734,33 @@ var sh;
             }
             randomizeGrid() {
                 let gridLettersNames = this.gameplay.gridLettersNames.slice();
+                let triesNum = 0;
+                do {
+                    triesNum++;
+                    gridLettersNames = Phaser.Utils.Array.Shuffle(gridLettersNames);
+                } while (this.checkRandomizationSimilarity(gridLettersNames) > 2 && triesNum < 25);
                 for (let i = 0; i < this.rows; i++) {
                     for (let j = 0; j < this.cols; j++) {
                         let l = this.grid[i][j]["letter"];
-                        let rnd = Phaser.Utils.Array.RemoveRandomElement(gridLettersNames);
+                        let rnd = gridLettersNames.shift();
                         l.setTexture(rnd);
                     }
                 }
+            }
+            checkRandomizationSimilarity(gridLettersNames) {
+                let similarity = 0;
+                for (let i = 0; i < gridLettersNames.length - 1; i++) {
+                    if (gridLettersNames[i] == gridLettersNames[i + 1]) {
+                        similarity++;
+                    }
+                }
+                for (let i = 0; i < gridLettersNames.length - this.rows; i++) {
+                    if (i + this.rows < gridLettersNames.length && gridLettersNames[i] == gridLettersNames[i + this.rows]) {
+                        similarity++;
+                    }
+                }
+                console.log("sim: ", similarity);
+                return similarity;
             }
             updateClickLetterTargetLabel() {
                 this.targetLetterLabel.setTexture(this.gameplay.getCorrectLetterName());

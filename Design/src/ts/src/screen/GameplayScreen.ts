@@ -214,13 +214,35 @@ namespace sh.screen {
 
         private randomizeGrid():void {
             let gridLettersNames:string[] = this.gameplay.gridLettersNames.slice();
+            let triesNum:number = 0;
+            do {
+                triesNum++;
+                gridLettersNames = Phaser.Utils.Array.Shuffle(gridLettersNames);
+            } while (this.checkRandomizationSimilarity(gridLettersNames) > 2 && triesNum < 25);
+
             for (let i:number = 0; i < this.rows; i++) {
                 for (let j:number = 0; j < this.cols; j++) {
                     let l:Phaser.GameObjects.Image = this.grid[i][j]["letter"];
-                    let rnd:any = Phaser.Utils.Array.RemoveRandomElement(gridLettersNames);
+                    let rnd:any = gridLettersNames.shift();
                     l.setTexture(rnd);
                 }
             }
+        }
+
+        private checkRandomizationSimilarity(gridLettersNames:string[]):number {
+            let similarity:number = 0;
+            for (let i:number = 0; i < gridLettersNames.length - 1; i++) {
+                if (gridLettersNames[i] == gridLettersNames[i+1]) {
+                    similarity++;
+                }
+            }
+            for (let i:number = 0; i < gridLettersNames.length - this.rows; i++) {
+                if (i+this.rows < gridLettersNames.length && gridLettersNames[i] == gridLettersNames[i+this.rows]) {
+                    similarity++;
+                }
+            }
+            console.log("sim: ",similarity);
+            return similarity;
         }
 
         public updateClickLetterTargetLabel():void {
