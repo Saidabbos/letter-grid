@@ -1049,4 +1049,3 @@ var sh;
         screen.TryAgainWindow = TryAgainWindow;
     })(screen = sh.screen || (sh.screen = {}));
 })(sh || (sh = {}));
-//# sourceMappingURL=main.js.map
