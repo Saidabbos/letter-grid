@@ -94,7 +94,7 @@ namespace sh.screen {
                 this._DoorL.width/2, this._DoorL.height/2,
                 this._DoorL.width/2, -this._DoorL.height/2
             ], [4, 8, 10], [5, 9, 11], [-1, -1, 1], -tweenDoorValueY);
-            setTimeout(onComplete, duration);
+            delayedCall(duration, onComplete);
         }
     }
 }

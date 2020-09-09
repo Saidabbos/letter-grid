@@ -42,6 +42,20 @@ function delayedCall(delay: number, callback: Function, args?: any[], callbackSc
     delayedCalls.push(t);
     return t;
 }
+function pauseAllDelayedCalls() {
+    for (let dc of delayedCalls) {
+        if (dc instanceof Phaser.Time.TimerEvent) {
+            (dc as Phaser.Time.TimerEvent).paused = true;
+        }
+    }
+}
+function resumeAllDelayedCalls() {
+    for (let dc of delayedCalls) {
+        if (dc instanceof Phaser.Time.TimerEvent) {
+            (dc as Phaser.Time.TimerEvent).paused = false;
+        }
+    }
+}
 function destroyAllDelayedCalls() {
     for (let dc of delayedCalls) {
         if (dc instanceof Phaser.Time.TimerEvent) {

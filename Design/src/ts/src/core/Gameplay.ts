@@ -113,9 +113,11 @@ namespace sh.core {
                 this.gridLettersNames.push(correctLetterName);
             }
 
-            let rwl:any = Phaser.Utils.Array.RemoveRandomElement(this.roundsWrongLetters);
+            let rwl:any = this.roundsWrongLetters.shift();
             for (let wl of rwl) {
-                this.gridLettersNames.push(wl);
+                for (let i:number = 0; i < 2; i++) {
+                    this.gridLettersNames.push(wl);
+                }
             }
         }
 

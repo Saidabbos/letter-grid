@@ -40,6 +40,20 @@ function delayedCall(delay, callback, args, callbackScope) {
     delayedCalls.push(t);
     return t;
 }
+function pauseAllDelayedCalls() {
+    for (let dc of delayedCalls) {
+        if (dc instanceof Phaser.Time.TimerEvent) {
+            dc.paused = true;
+        }
+    }
+}
+function resumeAllDelayedCalls() {
+    for (let dc of delayedCalls) {
+        if (dc instanceof Phaser.Time.TimerEvent) {
+            dc.paused = false;
+        }
+    }
+}
 function destroyAllDelayedCalls() {
     for (let dc of delayedCalls) {
         if (dc instanceof Phaser.Time.TimerEvent) {
@@ -212,9 +226,11 @@ var sh;
                 for (let i = 0; i < this.choicesNumPerRound; i++) {
                     this.gridLettersNames.push(correctLetterName);
                 }
-                let rwl = Phaser.Utils.Array.RemoveRandomElement(this.roundsWrongLetters);
+                let rwl = this.roundsWrongLetters.shift();
                 for (let wl of rwl) {
-                    this.gridLettersNames.push(wl);
+                    for (let i = 0; i < 2; i++) {
+                        this.gridLettersNames.push(wl);
+                    }
                 }
             }
             reset() {
@@ -506,7 +522,7 @@ var sh;
                     this._DoorL.width / 2, this._DoorL.height / 2,
                     this._DoorL.width / 2, -this._DoorL.height / 2
                 ], [4, 8, 10], [5, 9, 11], [-1, -1, 1], -tweenDoorValueY);
-                setTimeout(onComplete, duration);
+                delayedCall(duration, onComplete);
             }
         }
         screen.DoorsWindow = DoorsWindow;
@@ -522,10 +538,13 @@ var sh;
                 this.rows = 5;
                 this.cols = 5;
                 this.bgMusic = null;
+                this.sfxOpen = null;
+                this.sfxClose = null;
                 this.soundGooseYes = null;
                 this.soundGooseNo = null;
                 this.correctAudio = null;
                 this.wfsnd = null;
+                this.sfxCallToPrayer = null;
                 this.showCompleteWindow = (score, starScore) => {
                     let completeWindow = new screen.CompleteWindow(this.scene, (target) => {
                         this.playBtnClickAnim(target);
@@ -541,7 +560,8 @@ var sh;
                     delayedCall(1500, () => {
                         this.bgMusic.stop();
                         this.doorsWindow.open(() => {
-                            this.scene.sound.add("Call to prayer").play();
+                            this.sfxCallToPrayer = this.scene.sound.add("Call to prayer");
+                            this.sfxCallToPrayer.play();
                             delayedCall(6000, () => {
                                 setPageBackground("bg-blue");
                                 this.add(completeWindow);
@@ -619,7 +639,8 @@ var sh;
                     }
                 }
                 delayedCall(delay, () => {
-                    this.scene.sound.add("open").play();
+                    this.sfxOpen = this.scene.sound.add("open");
+                    this.sfxOpen.play();
                 });
                 this.targetLetterLabel.visible = false;
                 this.resetCrescentMoons();
@@ -658,7 +679,8 @@ var sh;
                     }
                 }
                 delayedCall(delay, () => {
-                    this.scene.sound.add("close").play();
+                    this.sfxClose = this.scene.sound.add("close");
+                    this.sfxClose.play();
                 });
                 if (showOut) {
                     delayedCall(1000, () => {
@@ -733,16 +755,24 @@ var sh;
                 }
             }
             randomizeGrid() {
-                let gridLettersNames = this.gameplay.gridLettersNames.slice();
+                let gridLettersNames = null;
+                let minTriesGrid = null;
+                let minTries = Number.MAX_VALUE;
                 let triesNum = 0;
+                let sim = Number.MAX_VALUE;
                 do {
                     triesNum++;
-                    gridLettersNames = Phaser.Utils.Array.Shuffle(gridLettersNames);
-                } while (this.checkRandomizationSimilarity(gridLettersNames) > 2 && triesNum < 25);
+                    gridLettersNames = Phaser.Utils.Array.Shuffle(this.gameplay.gridLettersNames.slice());
+                    sim = this.checkRandomizationSimilarity(gridLettersNames);
+                    if (sim < minTries) {
+                        minTries = sim;
+                        minTriesGrid = gridLettersNames;
+                    }
+                } while (sim > 0 && triesNum < 100);
                 for (let i = 0; i < this.rows; i++) {
                     for (let j = 0; j < this.cols; j++) {
                         let l = this.grid[i][j]["letter"];
-                        let rnd = gridLettersNames.shift();
+                        let rnd = minTriesGrid.shift();
                         l.setTexture(rnd);
                     }
                 }
@@ -858,6 +888,7 @@ var sh;
                 playInstructionSound();
             }
             showAreYouSurePage() {
+                pauseAllDelayedCalls();
                 setPageBackground("bg-blue");
                 this.pauseSounds();
                 this.areYouSureWindow = new screen.AreYouSureWindow(this.scene, () => {
@@ -867,6 +898,7 @@ var sh;
                 }, () => {
                     this.remove(this.areYouSureWindow);
                     this.unpauseSounds();
+                    resumeAllDelayedCalls();
                     setPageBackground("bg-australia");
                 });
                 this.add(this.areYouSureWindow);
@@ -888,20 +920,10 @@ var sh;
                 }
             }
             pauseSounds() {
-                if (this.soundGooseYes)
-                    this.soundGooseYes.stop();
-                if (this.soundGooseNo)
-                    this.soundGooseNo.stop();
-                if (this.correctAudio)
-                    this.correctAudio.pause();
-                if (this.bgMusic)
-                    this.bgMusic.pause();
+                this.scene.sound.pauseAll();
             }
             unpauseSounds() {
-                if (this.correctAudio)
-                    this.correctAudio.resume();
-                if (this.bgMusic)
-                    this.bgMusic.resume();
+                this.scene.sound.resumeAll();
             }
             destroyGameplay() {
                 this.setInputEnabled(false);
@@ -1027,3 +1049,4 @@ var sh;
         screen.TryAgainWindow = TryAgainWindow;
     })(screen = sh.screen || (sh.screen = {}));
 })(sh || (sh = {}));
+//# sourceMappingURL=main.js.map

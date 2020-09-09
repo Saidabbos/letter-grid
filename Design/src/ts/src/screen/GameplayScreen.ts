@@ -68,6 +68,7 @@ namespace sh.screen {
             this.gameplay.setupCallbacks(this.showCompleteWindow, this.showLoseWindow);
         }
 
+        private sfxOpen = null;
         public showOutGrid():void {
             this.setInputEnabled(false);
 
@@ -86,7 +87,8 @@ namespace sh.screen {
             }
 
             delayedCall(delay, ()=>{
-                this.scene.sound.add("open").play();
+                this.sfxOpen = this.scene.sound.add("open");
+                this.sfxOpen.play();
             });
 
             this.targetLetterLabel.visible = false;
@@ -110,6 +112,7 @@ namespace sh.screen {
             });
         }
 
+        private sfxClose = null;
         private showInGrid(showOut:boolean):void {
             this.setInputEnabled(false);
 
@@ -130,7 +133,8 @@ namespace sh.screen {
             }
 
             delayedCall(delay, ()=>{
-                this.scene.sound.add("close").play();
+                this.sfxClose = this.scene.sound.add("close");
+                this.sfxClose.play();
             });
 
             if (showOut) {
@@ -213,17 +217,28 @@ namespace sh.screen {
         }
 
         private randomizeGrid():void {
-            let gridLettersNames:string[] = this.gameplay.gridLettersNames.slice();
+            let gridLettersNames:string[] = null;
+            let minTriesGrid:string[] = null;
+            let minTries:number = Number.MAX_VALUE;
             let triesNum:number = 0;
+            let sim:number = Number.MAX_VALUE;
             do {
                 triesNum++;
-                gridLettersNames = Phaser.Utils.Array.Shuffle(gridLettersNames);
-            } while (this.checkRandomizationSimilarity(gridLettersNames) > 2 && triesNum < 25);
+
+                gridLettersNames = Phaser.Utils.Array.Shuffle(this.gameplay.gridLettersNames.slice());
+                sim = this.checkRandomizationSimilarity(gridLettersNames);
+
+                if (sim < minTries) {
+                    minTries = sim;
+                    minTriesGrid = gridLettersNames;
+                }
+
+            } while (sim > 0 && triesNum < 100);
 
             for (let i:number = 0; i < this.rows; i++) {
                 for (let j:number = 0; j < this.cols; j++) {
                     let l:Phaser.GameObjects.Image = this.grid[i][j]["letter"];
-                    let rnd:any = gridLettersNames.shift();
+                    let rnd:any = minTriesGrid.shift();
                     l.setTexture(rnd);
                 }
             }
@@ -365,6 +380,7 @@ namespace sh.screen {
 
         private areYouSureWindow:AreYouSureWindow;
         public showAreYouSurePage(): void {
+            pauseAllDelayedCalls();
             setPageBackground("bg-blue");
 
             this.pauseSounds();
@@ -376,10 +392,13 @@ namespace sh.screen {
             },()=> {
                 this.remove(this.areYouSureWindow);
                 this.unpauseSounds();
+                resumeAllDelayedCalls();
                 setPageBackground("bg-australia");
             });
             this.add(this.areYouSureWindow);
         }
+
+        private sfxCallToPrayer = null;
 
         public showCompleteWindow: (score: number, starScore: number) => void = (score: number, starScore: number) => {
             let completeWindow: CompleteWindow = new CompleteWindow(this.scene, (target) => {
@@ -398,7 +417,8 @@ namespace sh.screen {
                 this.bgMusic.stop();
 
                 this.doorsWindow.open(()=>{
-                    this.scene.sound.add("Call to prayer").play();
+                    this.sfxCallToPrayer = this.scene.sound.add("Call to prayer");
+                    this.sfxCallToPrayer.play();
 
                     delayedCall(6000, () => {
                         setPageBackground("bg-blue");
@@ -447,15 +467,11 @@ namespace sh.screen {
         }
 
         public pauseSounds():void {
-            if (this.soundGooseYes) this.soundGooseYes.stop();
-            if (this.soundGooseNo) this.soundGooseNo.stop();
-            if (this.correctAudio) this.correctAudio.pause();
-            if (this.bgMusic) this.bgMusic.pause();
+            this.scene.sound.pauseAll();
         }
 
         public unpauseSounds():void {
-            if (this.correctAudio) this.correctAudio.resume();
-            if (this.bgMusic) this.bgMusic.resume();
+            this.scene.sound.resumeAll();
         }
 
         public destroyGameplay():void {
