@@ -179,8 +179,21 @@ var sh;
                     this.currentLetter = null;
                 }
                 else {
-                    this.currentLetter = Phaser.Utils.Array.RemoveRandomElement(this.roundsLetter);
-                    this.randomizeGrid();
+                    let ind = Math.floor(Math.random() * this.roundsLetter.length);
+                    this.currentLetter = this.roundsLetter[ind];
+                    this.roundsLetter.splice(ind, 1);
+                    this.gridLettersNames = [];
+                    let correctLetterName = this.getCorrectLetterName();
+                    for (let i = 0; i < this.choicesNumPerRound; i++) {
+                        this.gridLettersNames.push(correctLetterName);
+                    }
+                    let rwl = this.roundsWrongLetters[ind];
+                    this.roundsWrongLetters.splice(ind, 1);
+                    for (let wl of rwl) {
+                        for (let i = 0; i < 2; i++) {
+                            this.gridLettersNames.push(wl);
+                        }
+                    }
                 }
                 this.correctAnswersCountThisRound = 0;
                 this.wrongAnswersCountThisRound = 0;
@@ -220,24 +233,10 @@ var sh;
             isRoundsComplete() {
                 return this.getCurrentTotalAnswersCount() / this.choicesNumPerRound >= this.totalRoundsNum;
             }
-            randomizeGrid() {
-                this.gridLettersNames = [];
-                let correctLetterName = this.getCorrectLetterName();
-                for (let i = 0; i < this.choicesNumPerRound; i++) {
-                    this.gridLettersNames.push(correctLetterName);
-                }
-                let rwl = this.roundsWrongLetters.shift();
-                for (let wl of rwl) {
-                    for (let i = 0; i < 2; i++) {
-                        this.gridLettersNames.push(wl);
-                    }
-                }
-            }
             reset() {
                 let json = game.cache.json.get('gameplay');
                 this.letters = json["letters"].slice();
                 let rounds = json["rounds"];
-                let correctLetters = json["correctLetters"];
                 this.roundsLetter = [];
                 this.roundsWrongLetters = [];
                 for (let r of rounds) {
