@@ -9,6 +9,10 @@ namespace sh {
                 type: Phaser.WEBGL,
                 width: App.CANVAS_WIDTH,
                 height: App.CANVAS_HEIGHT,
+                parent: 'game-container',
+                dom: {
+                    createContainer: false
+                },
                 scale: {
                     mode: FitScaleManager.detectBestScaleMode(),
                     autoCenter: Phaser.Scale.CENTER_BOTH

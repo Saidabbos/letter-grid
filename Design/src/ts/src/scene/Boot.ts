@@ -1,7 +1,7 @@
 module sh.scene {
     export class Boot extends Phaser.Scene {
         init() {
-            new FitScaleManager(this.game).setup();
+            // new FitScaleManager(this.game).setup();
         }
 
         create() {
