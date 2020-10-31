@@ -54,9 +54,7 @@ namespace sh.core {
             if (this.roundsLetter.length == 0) {
                 this.currentLetter = null;
             } else {
-                let ind:number = Math.floor(Math.random()*this.roundsLetter.length);
-                this.currentLetter = this.roundsLetter[ind];
-                this.roundsLetter.splice(ind, 1);
+                this.currentLetter = this.roundsLetter.shift();
 
                 this.gridLettersNames = [];
 
@@ -65,8 +63,7 @@ namespace sh.core {
                     this.gridLettersNames.push(correctLetterName);
                 }
 
-                let rwl:any = this.roundsWrongLetters[ind];
-                this.roundsWrongLetters.splice(ind, 1);
+                let rwl:any = this.roundsWrongLetters.shift();
                 for (let wl of rwl) {
                     for (let i:number = 0; i < 2; i++) {
                         this.gridLettersNames.push(wl);

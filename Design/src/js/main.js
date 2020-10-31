@@ -183,16 +183,13 @@ var sh;
                     this.currentLetter = null;
                 }
                 else {
-                    let ind = Math.floor(Math.random() * this.roundsLetter.length);
-                    this.currentLetter = this.roundsLetter[ind];
-                    this.roundsLetter.splice(ind, 1);
+                    this.currentLetter = this.roundsLetter.shift();
                     this.gridLettersNames = [];
                     let correctLetterName = this.getCorrectLetterName();
                     for (let i = 0; i < this.choicesNumPerRound; i++) {
                         this.gridLettersNames.push(correctLetterName);
                     }
-                    let rwl = this.roundsWrongLetters[ind];
-                    this.roundsWrongLetters.splice(ind, 1);
+                    let rwl = this.roundsWrongLetters.shift();
                     for (let wl of rwl) {
                         for (let i = 0; i < 2; i++) {
                             this.gridLettersNames.push(wl);
